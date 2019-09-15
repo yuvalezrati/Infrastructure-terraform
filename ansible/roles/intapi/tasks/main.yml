@@ -1,0 +1,17 @@
+---
+- name: Start Container
+  docker_container:
+    name: "{{ service }}"
+    image: "{{ service }}:{{ service_version }}"
+    recreate: yes
+    ports:
+      - "{{ api_port }}:{{ api_port }}"
+    volumes:
+      - /opt/api/config:/opt/api/config
+      - /opt/api/logs:/opt/api/logs
+    restart_policy:
+      unless-stopped
+    interactive:
+      no
+    state:
+      started

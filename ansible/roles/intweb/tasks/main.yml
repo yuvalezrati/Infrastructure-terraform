@@ -1,0 +1,17 @@
+---
+- name: Start Container
+  docker_container:
+    name: "{{ service }}"
+    image: "{{ service }}:{{ service_version }}"
+    recreate: yes
+    ports:
+      - "{{ web_port }}:{{ web_port }}"
+    volumes:
+      - /opt/web/config:/opt/web/config
+      - /opt/web/logs:/opt/web/logs
+    restart_policy:
+      unless-stopped
+    interactive:
+      no
+    state:
+      started
