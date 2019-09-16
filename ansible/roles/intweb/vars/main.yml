@@ -1,0 +1,5 @@
+web_port: 5000
+private_ip: 172.32.1.245
+db_port: 27017
+env_file: ".env"
+container_path: "/usr/src/app"

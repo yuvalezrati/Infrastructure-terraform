@@ -1,0 +1,17 @@
+---
+- name: Create Directory structure
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: 1000
+    group: 1000
+    recurse: yes
+  with_items:
+    - "/opt/{{ service }}/config"
+    - "/opt/{{ service }}/logs"
+
+- name: Install docker
+  apt:
+      name: docker.io
+      update_cache: yes
+      state: present

@@ -1,0 +1,10 @@
+---
+- name: Start Container
+  docker_container:
+    name: "{{ service }}"
+    image: "{{ image_name }}"
+    recreate: yes
+    ports:
+      - "{{ db_port }}:{{ db_port }}"
+    state:
+      started

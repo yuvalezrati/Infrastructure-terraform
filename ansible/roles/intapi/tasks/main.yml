@@ -1,0 +1,21 @@
+---
+- name: Create config file for api
+  template:
+    src:  "{{ env_file }}.jinja2"
+    dest: "/opt/{{ service }}/config/{{ env_file }}"
+- name: Create config file for db
+  template:
+    src: "database.jinja2"
+    dest: "/opt/{{ service }}/config/database.js"
+- name: Start Container
+  docker_container:
+    name: "{{ service }}"
+    image: "{{ image_name }}"
+    recreate: yes
+    ports:
+      - "{{ api_port }}:{{ api_port }}"
+    volumes:
+      - "/opt/{{ service }}/config/{{ env_file }}:{{ container_path }}/{{ env_file }}"
+      - "/opt/{{ service }}/config/database.js:{{ container_path }}/config/database.js"
+    state:
+      started
