@@ -63,7 +63,12 @@ pipeline {
                 script {
                     for ( service in servicesList ) {
                         serviceVersion = releaseFile["release"]["services"]["${service}"]["version"]
-                        sh "if [ -f /mnt/artifacts/dev/${service}_${serviceVersion}.tar ]; then echo [${service}] artifact of version ${serviceVersion} exists; else echo [${service}] FATAL artifact not found && exit 1; fi"
+                        try {
+                            sh "ls /mnt/artifacts/dev/${service}_${serviceVersion}.tar"
+                        } catch('err') {
+                            println("Artifact not exists ${service}_${serviceVersion}.tar")
+                            currentBuild.result = 'FAILURE'
+                        }
                     }
                 }
             }
