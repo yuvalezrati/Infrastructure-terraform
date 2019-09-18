@@ -65,7 +65,7 @@ pipeline {
                         serviceVersion = releaseFile["release"]["services"]["${service}"]["version"]
                         try {
                             sh "ls /mnt/artifacts/dev/${service}_${serviceVersion}.tar"
-                        } catch('err') {
+                        } catch (error) {
                             println("Artifact not exists ${service}_${serviceVersion}.tar")
                             currentBuild.result = 'FAILURE'
                         }
@@ -78,8 +78,7 @@ pipeline {
                 script {
                     dir('infrastructure/ansible') {
                         for ( service in servicesList ) {
-                            sh "cat hosts.template > hosts"
-                            sh "sed -i '/s/all/${service}/g' hosts"
+                            sh "echo [${service}] > hosts"
                             ipList = releaseFile["release"]["services"]["${service}"]["servers"]
                                 if ( ipList.isEmpty() ) {
                                     println("This ip list is empty for ${service}")
@@ -90,6 +89,18 @@ pipeline {
                                     }
                                 sh "ansible-playbook -i hosts main.yml --extra-vars 'service=${service}'"
                                 }
+                        }
+                    }
+                }
+            }
+        }
+        stage ('Run Automation') {
+            steps {
+                script {
+                    dir('automation') {
+                        for ( service in servicesList ) {
+                            ipList = releaseFile["release"]["services"]["${service}"]["servers"]
+                            sh ""
                         }
                     }
                 }
