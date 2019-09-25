@@ -1,0 +1,141 @@
+    1  ll -rt
+    2  ll
+    3  git clone https://github.com/intclassproject/Infrastructure.git
+    4  apt install git
+    5  yum install dit
+    6  yum install git
+    7* 
+    8  ll -rt
+    9  cd Infrastructure/
+   10  ll -rt
+   11  cd ..
+   12  ll -rt
+   13  git checkout yuri
+   14  ls
+   15  cd ..
+   16  pwd
+   17  git checkout yuri
+   18  cd Infrastructure
+   19  pwd
+   20  exit
+   21  ll -rt
+   22  cd Infrastructure/
+   23  git checkout yuri
+   24  ls
+   25  ll -rt
+   26  cat dev.json 
+   27  cat Dockerfile 
+   28  cat Jenkinsfile 
+   29  ll -rt
+   30  cd ansible/
+   31  ls
+   32  cat hosts.template 
+   33  cat ansible.cfg 
+   34  cd ..
+   35  ll -rt
+   36  cat Dockerfile 
+   37  docker build .
+   38  docker build . jen
+   39  yum install docker
+   40  docker build . jen
+   41  docker build .
+   42  docker ps
+   43  ls
+   44  docker build . -t jen
+   45  systemctl start docker
+   46  systemctl status
+   47  systemctl status docker
+   48* 
+   49  ll -rt
+   50  docker images
+   51  cat Dockerfile 
+   52  docker  rm 76a
+   53  docker  rm 76a7
+   54  docker --help
+   55  docker  rmi 76a7
+   56  docker images
+   57  docker ps
+   58  docker ps -a
+   59  ls /var/
+   60  ls /var/jenkins
+   61  ls /opt/jenkins
+   62* mkdir -p /var/jenkins_home
+   63  chown -R 1000:1000 /var/jenkins
+   64  ll -rt /var/jenkins
+   65  docker run -d -p 8080:8080 -p 50000:50000 -v /var/jenkins:/var/jenkins_home jen
+   66  docker ps
+   67  docker logs -f 7bc
+   68  cat dev.json 
+   69  ll -rt
+   70  cat ansible/
+   71  cd ansible/
+   72  ll -rt
+   73  docker ps -a
+   74  docker images
+   75  docker inspect jenkins/jenkins
+   76  ls /var/lib/docker/overlay2/3ee58650f612d3b63e6f09083da041dc17019ae0cb66566424281683fab77127/merged
+   77  ls /var/lib/docker/overlay2/3ee58650f612d3b63e6f09083da041dc17019ae0cb66566424281683fab77127/work/
+   78  cat /var/lib/docker/overlay2/3ee58650f612d3b63e6f09083da041dc17019ae0cb66566424281683fab77127/work/
+   79  ls /var/lib/docker/overlay2/3ee58650f612d3b63e6f09083da041dc17019ae0cb66566424281683fab77127/work/
+   80  ls /var/lib/docker/overlay2/3ee58650f612d3b63e6f09083da041dc17019ae0cb66566424281683fab77127/diff/
+   81  ls /var/lib/docker/overlay2/3ee58650f612d3b63e6f09083da041dc17019ae0cb66566424281683fab77127/diff/usr/
+   82  cat /var/lib/docker/overlay2/3ee58650f612d3b63e6f09083da041dc17019ae0cb66566424281683fab77127/diff/usr/local/bin/install-plugins.sh 
+   83  docker images
+   84  du -sh /var/lib/docker/*
+   85  du -sh /var/lib/docker
+   86  ls
+   87  vim Dockerfile
+   88  docker build . -t test
+   89  vim Dockerfile
+   90  docker build . -t test
+   91  docker images
+   92  du -sh /var/lib/docker
+   93  docker run -it centos:7 bash
+   94  docker images
+   95  du -sh /var/lib/docker
+   96  ls -rt
+   97  vim Dockerfile 
+   98  docker build . -t centos:ls
+   99  docker images
+  100  vim Dockerfile 
+  101  docker build . -t centos:ls2
+  102  vim Dockerfile 
+  103  docker build . -t centos:ls2
+  104  docker images
+  105  vim Dockerfile 
+  106  docker build . -t centos:ls3
+  107  docker images
+  108  du -sh /var/lib/docker
+  109  docker rmi $(docker images | grep centos | awk '{print $3}')
+  110  docker rmi $(docker images | grep centos | awk '{print $3}') -f
+  111  docker images
+  112  docker ps
+  113  ls
+  114  cat ansible.cfg 
+  115  ls -rt
+  116  ll -rt
+  117  cd ,,
+  118  ll -rt
+  119  cd ..
+  120  ls
+  121  cat Jenkinsfile 
+  122  vi Jenkinsfile 
+  123  git checkout ora
+  124  git pull
+  125  ls
+  126  ll -rt
+  127  git status
+  128  git checkout ora
+  129  git status
+  130  git add
+  131  git add .
+  132  git commit -a "replace yuri by ora"
+  133  git commit -a
+  134  git commit
+  135  git commit -a "ququ"
+  136  git commit -m "replace yuri by ora"
+  137  git config --global --edit
+  138  git status
+  139  git push
+  140  history
+  141  history > hist
