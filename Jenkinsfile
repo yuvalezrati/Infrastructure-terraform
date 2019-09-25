@@ -29,6 +29,9 @@ pipeline {
                     dir ('automation') {
                         checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git', url: 'https://github.com/intclassproject/Automation.git']]])
                     }
+                    dir ('configuration') {
+                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git', url: 'https://github.com/intclassproject/Configuration.git']]])
+                    }
                 }
             }
         }
@@ -79,6 +82,12 @@ pipeline {
                     dir('infrastructure/ansible') {
                         for ( service in servicesList ) {
                             sh "echo [${service}] > hosts"
+                            configVersion = releaseFile["release"]["services"]["${service}"]["configuration"]
+                            dir('Configuration') {
+                                sh "git checkout ${configVersion}"
+                            }
+                            sh "mkdir -p ./roles/ansible/${service}/files"
+                            sh "cp ../../Configuration/${service}/*.* ./roles/${service}/files"
                             ipList = releaseFile["release"]["services"]["${service}"]["servers"]
                                 if ( ipList.isEmpty() ) {
                                     println("This ip list is empty for ${service}")
