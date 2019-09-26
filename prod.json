@@ -1,0 +1,12 @@
+{
+  "Services" : {
+    "Configuration" : "1.0.0",
+    "INT_WEB" : "1.0.0",
+    "Infrastructure" : "1.0.0",
+    "INT_API" : "1.0.0",
+    "INT_DB" : "1.0.0",
+    "Automation" : "1.0.0",
+    "Release" : "1.0.0",
+    "Monitoring" : "1.0.0"
+  }
+}
