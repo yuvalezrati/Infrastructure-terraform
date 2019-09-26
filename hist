@@ -1,5 +1,6 @@
     sudo su -  
     yum install git
+    yum install docker
     git clone https://github.com/intclassproject/Infrastructure.git
     9  cd Infrastructure/
    10  ll -rt
