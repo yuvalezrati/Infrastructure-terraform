@@ -2,7 +2,7 @@
   "variables": {
     "aws_access_key": "",
     "aws_secret_key": "",
-    "target_regions": "us-east-2,eu-west-3,us-east-1"
+    "target_regions": "us-east-2,us-east-1"
   },
   "builders": [{
     "type": "amazon-ebs",
@@ -18,6 +18,9 @@
     "ssh_interface": "public_ip",
     "security_group_id": "sg-0",
     "subnet_id": "subnet-1",
+    "tags": {
+      "purpose": "golden.image"
+    },
     "source_ami_filter": {
       "filters": {
         "virtualization-type": "hvm",
@@ -27,25 +30,13 @@
       "owners": ["09"],
       "most_recent": true
     },
-    "instance_type": "m3.medium",
+    "instance_type": "t2.micro",
     "ami_name": "golden.image-{{timestamp}}",
     "ami_block_device_mappings": [
       {
         "device_name": "/dev/xvda",
         "delete_on_termination": "true",
-        "volume_size": 30,
-        "volume_type": "standard"
-      },
-      {
-        "device_name": "/dev/xvdb",
-        "delete_on_termination": "true",
-        "volume_size": 30,
-        "volume_type": "standard"
-      },
-      {
-        "device_name": "/dev/xvdc",
-        "delete_on_termination": "true",
-        "volume_size": 30,
+        "volume_size": 8,
         "volume_type": "standard"
       }
     ]

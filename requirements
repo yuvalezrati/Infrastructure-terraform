@@ -1,0 +1,6 @@
+- create keypair named aws
+- place pem file --> /var/jenkins_home/aws_keys/aws.pem
+- create a default security group and update packer json line 19
+- create a subnet for packer update packer json line 20
+- update owner id for vanilla ami packer json line 21
+-
