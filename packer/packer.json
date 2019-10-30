@@ -1,0 +1,50 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "target_regions": "us-east-2,us-east-1"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-1",
+    "ami_regions": "{{user `target_regions`}}",
+    "ssh_agent_auth": "false",
+    "communicator": "ssh",
+    "ssh_keypair_name": "aws",
+    "ssh_private_key_file": "/var/jenkins_home/aws_keys/aws.pem",
+    "ssh_username": "ubuntu",
+    "ssh_interface": "public_ip",
+    "security_group_id": "sg-0",
+    "subnet_id": "subnet-1",
+    "tags": {
+      "purpose": "golden.image"
+    },
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
+        "root-device-type": "ebs"
+      },
+      "owners": ["09"],
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "ami_name": "golden.image-{{timestamp}}",
+    "ami_block_device_mappings": [
+      {
+        "device_name": "/dev/xvda",
+        "delete_on_termination": "true",
+        "volume_size": 8,
+        "volume_type": "standard"
+      }
+    ]
+  }],
+  "provisioners": [
+    {
+      "type": "shell-local",
+      "command": "ansible-playbook -i inventory.aws_ec2.yml golden_image.yml -e ansible_python_interpreter=/usr/bin/python3"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+---
+- name: Copy Configuration file
+  copy:
+    src: files/database.js
+    dest: "/opt/{{ service }}/config"
+
+- name: Start Container
+  docker_container:
+    name: "{{ service }}"
+    image: "{{ service }}:{{ service_version }}"
+    recreate: yes
+    ports:
+      - "{{ api_port }}:{{ api_port }}"
+    volumes:
+      - "/opt/{{ service }}/config:{{ config_location }}"
+    restart_policy:
+      unless-stopped
+    interactive:
+      no
+    state:
+      started
