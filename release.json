@@ -1,0 +1,29 @@
+{
+  "release": {
+    "name": "Production release file",
+    "version": "1.0.0",
+    "infrastructure_version": "1.0.0",
+    "automation_version": "master",
+    "environment": "eu_big",
+    "services": {
+      "intapi": {
+        "version": "1.0.0",
+        "configuration": "1.0.0",
+        "instance_type": "t2.micro",
+        "instance_count": "2"
+      },
+      "intweb": {
+        "version": "1.0.0",
+        "configuration": "1.0.0",
+        "instance_type": "t2.micro",
+        "instance_count": "2"
+      },
+      "intdb": {
+        "version": "1.0.0",
+        "configuration": "1.0.0",
+        "instance_type": "t2.micro",
+        "instance_count": "1"
+      }
+    }
+  }
+}

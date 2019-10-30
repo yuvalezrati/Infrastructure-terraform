@@ -1,0 +1,152 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
+@NonCPS
+def createBooleanParameter(String value, String desc) {
+   return [$class: 'BooleanParameterDefinition', defaultValue: false, name: value, description: desc]
+}
+@NonCPS
+def jsonParse(def json) {
+    new groovy.json.JsonSlurperClassic().parseText(json)
+}
+pipeline {
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+    }
+    agent {
+        label 'master'
+    }
+    stages {
+        stage ('Checkout') {
+            steps {
+                script {
+                    deleteDir()
+                    dir ('release') {
+                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git', url: 'https://github.com/intclassproject/Release.git']]])
+                    }
+                    dir ('infrastructure') {
+                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git', url: 'https://github.com/intclassproject/Infrastructure.git']]])
+                    }
+                    dir ('automation') {
+                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git', url: 'https://github.com/intclassproject/Automation.git']]])
+                    }
+                    dir ('configuration') {
+                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git', url: 'https://github.com/intclassproject/Configuration.git']]])
+                    }
+                }
+            }
+        }
+        stage ('Load release json') {
+            steps {
+                script {
+                    dir('release') {
+                        releaseFile = jsonParse(readFile("release.json"))
+                        releaseName = releaseFile["release"]["name"]
+                        releaseVersion = releaseFile["release"]["version"]
+                        infrastructureVersion = releaseFile["release"]["infrastructure_version"]
+                        automationVersion = releaseFile["release"]["automation_version"]
+                        envName = releaseFile["release"]["environment"]
+                        servicesList = releaseFile["release"]["services"].keySet()
+                        println("Those Services will be deployed ${servicesList}")
+                        print("The environment is ${envName}")
+                    }
+                    dir('automation') {
+                        sh "git checkout ${automationVersion}"
+                    }
+                    dir('infrastructure') {
+                        sh "git checkout ${infrastructureVersion}"
+                        environmentFile = jsonParse(readFile("environments.json"))
+                        aws_region = environmentFile['environments']["${envName}"]['aws_region']
+                        aws_vpc = environmentFile['environments']["${envName}"]['vpc_id']
+                        subnet_prefix = environmentFile['environments']["${envName}"]['subnet_prefix']
+                        security_group = environmentFile['environments']["${envName}"]['security_group']
+                    }
+                }
+            }
+        }
+        stage ('Verify artifacts exist') {
+        // validate artifacts in Nexus
+            steps {
+                script {
+                    for ( service in servicesList ) {
+                        serviceVersion = releaseFile["release"]["services"]["${service}"]["version"]
+                        try {
+                            sh "ls /mnt/artifacts/dev/${service}_${serviceVersion}.tar"
+                        } catch (error) {
+                            println("Artifact not exists ${service}_${serviceVersion}.tar")
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
+        }
+        stage ('Vaildate Instances amount') {
+            steps {
+                script {
+                    dir ('./infrastructure') {
+                        for ( service in servicesList ) {
+                            int instance_count = releaseFile["release"]["services"]["${service}"]['instance_count']
+                            sh "sed -i 's/REGION/${aws_region}/g' inventory.aws_ec2.yml"
+                            int currentCount = sh script: "ansible-inventory -i inventory.aws_ec2.yml --list | grep Service_${service} | grep : | wc -l", returnStdout: true
+                            if ( currentCount < instance_count ) {
+                                int instances_to_add = instance_count - currentCount
+                                dir('./terraform') {
+                                    sh "terraform apply ec2.tf --vars "
+                                }
+                            }
+                            else if ( currentCount > instance_count ) {
+                                // remove instances
+                            }
+                            else {
+                                println("[INFO] Instnaces amount are aligned")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage ('Deploy Services') {
+            steps {
+                script {
+                    dir('infrastructure/ansible') {
+                        for ( service in servicesList ) {
+                            sh "echo [${service}] > hosts"
+                            configVersion = releaseFile["release"]["services"]["${service}"]["configuration"]
+                            dir('Configuration') {
+                                sh "git checkout ${configVersion}"
+                            }
+                            sh "mkdir -p ./roles/ansible/${service}/files"
+                            sh "cp ../../Configuration/${service}/*.* ./roles/${service}/files"
+                            ipList = releaseFile["release"]["services"]["${service}"]["servers"]
+                                if ( ipList.isEmpty() ) {
+                                    println("This ip list is empty for ${service}")
+                                    currentBuild.result = 'FAILURE'
+                                } else {
+                                    for ( ip in ipList ) {
+                                        sh "echo ${ip} >> hosts"
+                                    }
+                                sh "ansible-playbook -i hosts main.yml --extra-vars 'service=${service}'"
+                                }
+                        }
+                    }
+                }
+            }
+        }
+        stage ('Run Automation') {
+            steps {
+                script {
+                    dir('automation') 
+                    automationVersion = releaseFile["release"]["automation"]     
+                    sh "git checkout ${automationVersion}"
+                   
+                        for ( service in servicesList ) {
+                             serverAddresses = releaseFile["release"]["services"]["${service}"]["servers"]   
+                           for ( address in serverAddresses )  {   
+                           sh "./sanity_tests.sh ${service} ${address} }
+                                                         }
+                        }
+                    }
+                }
+            }
+        }
+    }
+  }

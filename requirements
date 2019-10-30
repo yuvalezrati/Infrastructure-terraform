@@ -7,3 +7,13 @@
 - vpc --> ec2.tf line 9
 - create security group --> ec2.tf line 36
 - obtain config file for intapi and intweb (ansible roles)
+- add terraform extra vars --> Jenkinsfile line 92
+
+
+
+
+
+todo:
+ - add dynamic target regions for packer:
+   parse environments.json -> get regions -> place them in packer.json
+   Gadi
