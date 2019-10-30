@@ -12,4 +12,5 @@ RUN wget https://releases.hashicorp.com/packer/1.4.4/packer_1.4.4_linux_amd64.zi
 RUN unzip packer_1.4.4_linux_amd64.zip
 RUN mv packer /usr/bin
 RUN rm -f packer_1.4.4_linux_amd64.zip
+RUN apt -y install vim curl wget
 USER jenkins

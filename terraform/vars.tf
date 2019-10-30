@@ -1,4 +1,4 @@
-variable "aws_region" {default = "eu-west-3"}
+variable "aws_region" {default = "us-east-1"}
 variable "count" {}
 variable "cred_file" { default = "/var/jenkins_home/aws_keys/credentials" }
 variable "instanceType" {}
@@ -12,4 +12,3 @@ variable "publicip" {}
 variable "subnet_scope" {}
 variable "securitygroup" {}
 variable "subnetName" {}
-variable "purpose" {}

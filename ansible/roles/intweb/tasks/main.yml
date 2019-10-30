@@ -1,0 +1,22 @@
+---
+- name: Copy Configuration file
+  copy:
+    src: files/.env
+    dest: "/opt/{{ service }}/config"
+
+- name: Start Container
+  docker_container:
+    name: "{{ service }}"
+    image: "{{ service }}:{{ service_version }}"
+    recreate: yes
+    ports:
+      - "{{ web_port }}:{{ web_port }}"
+    volumes:
+      - "/opt/{{ service }}/config/.env:{{ config_location }}"
+      #- "/opt/{{ service }}/logs:{{ log_location }}"
+    restart_policy:
+      unless-stopped
+    interactive:
+      no
+    state:
+      started

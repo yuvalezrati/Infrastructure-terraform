@@ -4,9 +4,6 @@ provider "aws" {
   region                  = "${var.aws_region}"
 }
 
-variable string {
-  default                  = "digital-*"}
-
 data "aws_vpc"  "selected" {
   tags                    = {
     Name                  = "${var.aws_vpc}"
@@ -28,7 +25,6 @@ data "aws_ami" "ubuntu_ami" {
   owners                  = ["0"]
 }
 
-
  data "aws_subnet_ids" "selected_subnet" {
    vpc_id                  = "${data.aws_vpc.selected.id}"
    tags {
@@ -36,12 +32,9 @@ data "aws_ami" "ubuntu_ami" {
    }
  }
 
- data "aws_security_group" "qa_security_group"{
+ data "aws_security_group" "security_group"{
    id                      = "${var.securitygroup}"
  }
-
-
-
 
 ### Launch Instances
 resource "aws_instance" "app" {
@@ -51,12 +44,15 @@ resource "aws_instance" "app" {
   ami                     = "${data.aws_ami.ubuntu_ami.id}"
   instance_type           = "${var.instanceType}"
   associate_public_ip_address = "${var.publicip}"
-  security_groups         = ["${data.aws_security_group.qa_security_group.id}"]
+  security_groups         = ["${data.aws_security_group.security_group.id}"]
   
   root_block_device {
-    volume_size = 80
+    volume_size = 8
   }
   tags                    = {
     Name                  = "${var.instanceName}"
+    Service               = "${var.serviceName}"
+    ServiceVersion        = "${var.serviceVersion}"
+    EnvName               = "${var.envName}"
   }
 }
