@@ -1,0 +1,2 @@
+web_port: "5000"
+config_location: "/usr/src/app/Flask/.env"

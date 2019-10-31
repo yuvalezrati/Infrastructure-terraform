@@ -1,0 +1,19 @@
+- create keypair named aws
+- place pem file --> /var/jenkins_home/aws_keys/aws.pem
+- create a default security group and update packer json line 19
+- create a subnet for packer update packer json line 20
+- update owner id for vanilla ami packer json line 21
+- create credentials file for terraform --> vars.tf line 3
+- vpc --> ec2.tf line 9
+- create security group --> ec2.tf line 36
+- obtain config file for intapi and intweb (ansible roles)
+- add terraform extra vars --> Jenkinsfile line 92
+
+
+
+
+
+todo:
+ - add dynamic target regions for packer:
+   parse environments.json -> get regions -> place them in packer.json
+   Gadi

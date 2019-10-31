@@ -1,0 +1,28 @@
+pipeline {
+    options {
+        timeout(time: 20, unit: 'MINUTES')
+    }
+    agent {
+        label 'master'
+    }
+    stages {
+        stage('Validate json') {
+            steps {
+                dir('./packer') {
+                    script {
+                        sh "packer validate packer.json"
+                    }
+                }
+            }
+        }
+        stage('Build the image') {
+            steps {
+                dir('./packer') {
+                    script {
+                        sh "packer build packer.json"
+                    }
+                }
+            }
+        }
+    }
+}
