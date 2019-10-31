@@ -141,7 +141,7 @@ pipeline {
                         for ( service in servicesList ) {
                              serverAddresses = releaseFile["release"]["services"]["${service}"]["servers"]   
                            for ( address in serverAddresses )  {   
-                           sh "./sanity_tests.sh ${service} ${address} }
+                           sh "./sanity_tests.sh ${service} ${address}" }
                                                          }
                         }
                     }
