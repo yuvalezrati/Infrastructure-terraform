@@ -6,7 +6,7 @@ provider "aws" {
 
 data "aws_vpc"  "selected" {
   tags                    = {
-    Name                  = "${var.aws_vpc}"
+    Name                  = "${vpc-0cc6daf94e66e3f5a}"
   }
 }
 
@@ -33,7 +33,7 @@ data "aws_ami" "ubuntu_ami" {
  }
 
  data "aws_security_group" "security_group"{
-   id                      = "${var.securitygroup}"
+   id                      = "${sg-042ef03f4cfac32a1}"
  }
 
 ### Launch Instances

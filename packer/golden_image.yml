@@ -1,4 +1,5 @@
 ---
+
 - name: Pre Tasks
   hosts: purpose_golden.image
   gather_facts: false

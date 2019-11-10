@@ -13,11 +13,11 @@
     "ssh_agent_auth": "false",
     "communicator": "ssh",
     "ssh_keypair_name": "aws",
-    "ssh_private_key_file": "/var/jenkins_home/aws_keys/aws.pem",
+    "ssh_private_key_file": "/var/jenkins_home/aws_keys/yuval.pem",
     "ssh_username": "ubuntu",
     "ssh_interface": "public_ip",
-    "security_group_id": "sg-0",
-    "subnet_id": "subnet-1",
+    "security_group_id": "sg-042ef03f4cfac32a1",
+    "subnet_id": "subnet-03d6357b2f6e5c96c",
     "tags": {
       "purpose": "golden.image"
     },
@@ -27,7 +27,7 @@
         "name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
         "root-device-type": "ebs"
       },
-      "owners": ["09"],
+      "owners": ["099720109477"],
       "most_recent": true
     },
     "instance_type": "t2.micro",
